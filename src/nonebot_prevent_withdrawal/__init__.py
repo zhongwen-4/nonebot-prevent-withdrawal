@@ -252,7 +252,23 @@ async def group_recall_handle(
                 group_id= i,
                 message= f"消息撤回提醒\n操作群：{group_name} - {group_id}\n操作人：{operator_name} - {operator_id}\n撤回人：{uaer_name} - {user_id}\n以下是撤回消息"
             )
-
+    
+    if len(msg["message"]) == 0:
+        if data["model"] == 0:
+            for i in config:
+                await bot.send_private_msg(
+                    user_id= int(i),
+                    message= "出错啦！这条消息可能是文件消息，协议端暂时获取不到！"
+                )
+            
+        if data["model"] == 1:
+            for i in data["group"]:
+                await bot.send_group_msg(
+                    group_id= i,
+                    message= "出错啦！这条消息可能是文件消息，协议端暂时获取不到！"
+                )
+            
+        await group_recall.finish()
 
     for msgsegment in msg["message"]:
         if msgsegment["type"] == "video":    # 判断消息类型为视频
@@ -282,23 +298,6 @@ async def group_recall_handle(
                     
                 pathlib.Path(f"{_path}/撤回消息.mp4").unlink()
                 await group_recall.finish()
-
-        if len(msg["message"]) == 0:
-            if data["model"] == 0:
-                for i in config:
-                    await bot.send_private_msg(
-                        user_id= int(i),
-                        message= "出错啦！这条消息可能是视频消息，协议端暂时获取不到！"
-                    )
-            
-            if data["model"] == 1:
-                for i in data["group"]:
-                    await bot.send_group_msg(
-                        group_id= i,
-                        message= "出错啦！这条消息可能是视频消息，协议端暂时获取不到！"
-                    )
-            
-            await group_recall.finish()
 
         message += MessageSegment(
             type= msgsegment["type"],
