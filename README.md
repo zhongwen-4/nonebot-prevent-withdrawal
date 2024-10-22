@@ -15,6 +15,12 @@ _✨ 防撤回插件 ✨_
 
 本插件支持多个消息段撤回监听，但是仅支持群聊，目前只支持**Lagrange.OneBot**，因为根据群友的消息~~llonebot和NapCat似乎视频消息不返回网络URL~~，此项目有些奇怪的BUG，例如黄豆表情无法显示、发送火车等表情会显示表情和文字等
 
+> [!IMPORTANT]
+> 私聊模式**不支持**发送撤回的视频消息，因为Lagrange.OneBot的私聊消息有BUG
+
+> [!WARNING]
+> 本插件不支持监听撤回的文件，而且由于某些BUG似乎无法发送提示文本
+
 ## 💿 安装
 
 <details open>
@@ -53,12 +59,6 @@ _✨ 防撤回插件 ✨_
 打开 nonebot2 项目根目录下的 `pyproject.toml` 文件, 在 `[tool.nonebot]` 部分追加写入
 
     plugins = ["nonebot-prevent-withdrawal"]
-
-> [!IMPORTANT]
-> 私聊模式**不支持**发送撤回的视频消息，因为Lagrange.OneBot的私聊消息有BUG
-
-> [!WARNING]
-> 本插件不支持监听撤回的文件，而且由于某些BUG似乎无法发送提示文本
 
 </details>
 
