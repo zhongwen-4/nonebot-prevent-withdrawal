@@ -221,7 +221,7 @@ async def group_recall_handle(
 
     if data["model"] == 0:
         for i in config:
-            if i not in friend_list:
+            if int(i) not in friend_list:
                 x.append(i)
                 logger.error(f"这个人没加好友列表，无法发送撤回消息；{i}")
         
@@ -283,7 +283,6 @@ async def group_recall_handle(
                 pathlib.Path(f"{_path}/撤回消息.mp4").unlink()
                 await group_recall.finish()
 
-        print(msg)
         if len(msg["message"]) == 0:
             if data["model"] == 0:
                 for i in config:
