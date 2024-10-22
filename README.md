@@ -9,6 +9,21 @@
 # nonebot-prevent-withdrawal
 _✨ 防撤回插件 ✨_
 
+<a href="https://11.onebot.dev">
+    <img alt="Static Badge" src="https://img.shields.io/badge/OneBot-V11-%23EEE685?style=flat-square&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAIVBMVEUAAAAAAAADAwMHBwceHh4UFBQNDQ0ZGRkoKCgvLy8iIiLWSdWYAAAAAXRSTlMAQObYZgAAAQVJREFUSMftlM0RgjAQhV+0ATYK6i1Xb+iMd0qgBEqgBEuwBOxU2QDKsjvojQPvkJ/ZL5sXkgWrFirK4MibYUdE3OR2nEpuKz1/q8CdNxNQgthZCXYVLjyoDQftaKuniHHWRnPh2GCUetR2/9HsMAXyUT4/3UHwtQT2AggSCGKeSAsFnxBIOuAggdh3AKTL7pDuCyABcMb0aQP7aM4AnAbc/wHwA5D2wDHTTe56gIIOUA/4YYV2e1sg713PXdZJAuncdZMAGkAukU9OAn40O849+0ornPwT93rphWF0mgAbauUrEOthlX8Zu7P5A6kZyKCJy75hhw1Mgr9RAUvX7A3csGqZegEdniCx30c3agAAAABJRU5ErkJggg==">
+</a>
+<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=Uw7I6zuHfpRfXlwddRqDbyE10MZnB4iB&jump_from=webapi&authKey=tp4LiunKcl44e+1gKEag50kyemidx/xV5a9aqdXkn9t9C9bvj18bdd2EBciZmVBt">
+    <img alt="Static Badge" src="https://img.shields.io/badge/QQ%E7%BE%A4-814190174-%23EEE685?style=flat-square&logo=tencentqq">
+</a>
+
+![Static Badge](https://img.shields.io/badge/Python-3.10%2B-%23E5C62A?style=flat-square&logo=python)
+![GitHub repo size](https://img.shields.io/github/repo-size/zhongwen-4/nonebot-prevent-withdrawal?logo=github&label=%E5%82%A8%E5%AD%98%E5%BA%93%E5%A4%A7%E5%B0%8F)
+![GitHub Tag](https://img.shields.io/github/v/tag/zhongwen-4/nonebot-prevent-withdrawal?logo=github)
+![PyPI - License](https://img.shields.io/pypi/l/nonebot-prevent-withdrawal?label=%E5%BC%80%E6%BA%90%E5%8D%8F%E8%AE%AE)
+![PyPI - Version](https://img.shields.io/pypi/v/nonebot-prevent-withdrawal?logo=python&label=PyPi)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/t/zhongwen-4/nonebot-prevent-withdrawal?logo=github)
+
+
 </div>
 
 ## 📖 介绍
@@ -75,3 +90,8 @@ _✨ 防撤回插件 ✨_
 ![图片2](./img/2.jpg)
 ![图片3](./img/3.png)
 ![图片4](./img/4.png)
+
+## 感谢以下项目提供支持
+[NoneBot](https://github.com/nonebot/nonebot2)
+
+[Lagrange](https://github.com/LagrangeDev/Lagrange.Core)
