@@ -32,7 +32,7 @@ _✨ 防撤回插件 ✨_
 
 使用方法请参考[这里](#-使用)
 
-> [!IMPORTANT]
+> [!WARNING]
 > 私聊模式**不支持**发送撤回的视频消息，因为Lagrange.OneBot的私聊消息有BUG
 
 > [!WARNING]
