@@ -1,7 +1,7 @@
 [project]
 name = "nonebot-prevent-withdrawal"
-version = "0.1.0"
-description = "Default template for PDM package"
+version = "0.1.1"
+description = "偷看群友撤回的消息"
 authors = [
     {name = "zhongwen-4", email = "2401128923@qq.com"},
 ]
