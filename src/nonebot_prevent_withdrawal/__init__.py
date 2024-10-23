@@ -65,6 +65,11 @@ async def startup():
         data = {}
         xjson(data, path)
 
+    if "model" not in data:
+        data["model"] = 0
+        xjson(data, path)
+        logger.info("未找到模式设置，已默认为私聊")
+
 
 @unseal.handle()
 async def unseal_handle(
@@ -228,14 +233,11 @@ async def group_recall_handle(
         if x != []:
             await group_recall.finish()
 
-
-    if data["group"] == []:
-        data["group"].append(data["unseal"][0])
-        logger.warning("未添加推送群，默认选择开启群第一个")
-    
-    if "model" not in data:
-        data["model"] = 0
-        logger.warning("未设置私聊模式，默认选择私聊模式")
+    if "group" in data:
+        if data["group"] == []:
+            data["model"] = 0
+            xjson(data, path)
+            logger.info("未找到群聊设置，已设置为私聊")
     
     
     if data["model"] == 0:
@@ -245,7 +247,6 @@ async def group_recall_handle(
                 message= f"消息撤回提醒\n操作群：{group_name} - {group_id}\n操作人：{operator_name} - {operator_id}\n撤回人：{uaer_name} - {user_id}\n以下是撤回消息"
             )
 
-    
     if data["model"] == 1:
         for i in data["group"]:
             await bot.send_group_msg(
