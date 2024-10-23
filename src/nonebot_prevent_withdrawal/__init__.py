@@ -17,9 +17,9 @@ from nonebot.adapters.onebot.v11 import(
 )
 
 
-import json, pathlib, httpx
+import json, pathlib, httpx, random
 require("nonebot_plugin_localstore")
-from nonebot_plugin_localstore import get_plugin_data_dir, get_plugin_cache_file
+from nonebot_plugin_localstore import get_plugin_data_dir, get_plugin_cache_dir
 from nonebot.permission import SUPERUSER
 from nonebot.plugin import PluginMetadata
 
@@ -191,7 +191,7 @@ async def group_recall_handle(
     bot: Bot,
     event: GroupRecallNoticeEvent
 ):
-
+    
     data = djson(path)
     operator_id = event.operator_id
     user_id = event.user_id
@@ -273,6 +273,8 @@ async def group_recall_handle(
 
     for msgsegment in msg["message"]:
         if msgsegment["type"] == "video":    # 判断消息类型为视频
+            random_name = random.randint(1, 100000)
+
             if data["model"] == 0:    # 判断私聊模式
                 for i in config:
                     await bot.send_private_msg(
@@ -285,19 +287,19 @@ async def group_recall_handle(
                 async with httpx.AsyncClient() as client:
                     response = await client.get(msgsegment["data"]["url"])
                     response.raise_for_status()
-                    _path = get_plugin_cache_file()
-                    with open(f"{_path}/撤回消息.mp4", "wb") as f:
+                    _path = get_plugin_cache_dir()
+                    with open(f"{_path}/{random_name}.mp4", "wb") as f:
                         f.write(response.content)
 
-                _path = get_plugin_cache_file()
+                _path = get_plugin_cache_dir()
                 for a in data["group"]:
                     await bot.call_api(
                         "upload_group_file",
                         group_id= a,
-                        file= f"{_path}/撤回消息.mp4",
+                        file= f"{_path}/{random_name}.mp4",
                     )
                     
-                pathlib.Path(f"{_path}/撤回消息.mp4").unlink()
+                pathlib.Path(f"{_path}/{random_name}.mp4").unlink()
                 await group_recall.finish()
 
         message += MessageSegment(
