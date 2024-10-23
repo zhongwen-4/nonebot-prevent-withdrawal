@@ -19,7 +19,7 @@ from nonebot.adapters.onebot.v11 import(
 
 import json, pathlib, httpx
 require("nonebot_plugin_localstore")
-from nonebot_plugin_localstore import get_plugin_data_dir
+from nonebot_plugin_localstore import get_plugin_data_dir, get_plugin_cache_file
 from nonebot.permission import SUPERUSER
 from nonebot.plugin import PluginMetadata
 
@@ -285,11 +285,11 @@ async def group_recall_handle(
                 async with httpx.AsyncClient() as client:
                     response = await client.get(msgsegment["data"]["url"])
                     response.raise_for_status()
-                    _path = get_plugin_data_dir()
+                    _path = get_plugin_cache_file()
                     with open(f"{_path}/撤回消息.mp4", "wb") as f:
                         f.write(response.content)
 
-                _path = get_plugin_data_dir()
+                _path = get_plugin_cache_file()
                 for a in data["group"]:
                     await bot.call_api(
                         "upload_group_file",
