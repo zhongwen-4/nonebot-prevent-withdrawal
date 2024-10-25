@@ -193,16 +193,14 @@ async def del_group_handle(
 
 
 @add_users.handle()
-async def add_users_handle(
-    user: Match[At | int]
-):
+async def add_users_handle(user: Match[At | int]):
     data = djson(path)
 
     if user.available:
         if isinstance(user.result, At):
             user_id = user.result.target
         else:
-            user_id = user.result
+            user_id = str(user.result)
 
     if "users" not in data:
         data["users"] = []
@@ -219,16 +217,14 @@ async def add_users_handle(
 
 
 @del_users.handle()
-async def del_users_handle(
-    user: Match[At | int]
-):
+async def del_users_handle(user: Match[At | int]):
     data = djson(path)
 
     if user.available:
         if isinstance(user.result, At):
             user_id = user.result.target
         else:
-            user_id = user.result
+            user_id = str(user.result)
 
     if "users" not in data:
         await del_users.finish("此人并未排除撤回消息，无需再次排除")
@@ -242,16 +238,13 @@ async def del_users_handle(
 
 
 @event_preprocessor
-async def do_something(
-    event: GroupRecallNoticeEvent
-):
-    
+async def do_something(event: GroupRecallNoticeEvent):
     data = djson(path)
 
     if "users" not in data:
         return
 
-    if event.user_id in data["users"]:
+    if str(event.user_id) in data["users"]:
         logger.info(f"用户{event.user_id}的撤回消息被管理员排除，此次跳过")
         raise IgnoredException("撤回消息被管理员排除")
 
