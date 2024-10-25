@@ -242,7 +242,10 @@ async def del_users_handle(
 
 
 @event_preprocessor
-async def do_something(event: GroupRecallNoticeEvent):
+async def do_something(
+    event: GroupRecallNoticeEvent
+):
+    
     data = djson(path)
 
     if "users" not in data:
