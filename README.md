@@ -91,10 +91,15 @@ _✨ 防撤回插件 ✨_
 | 加白/删白 [@/输入QQ号] | 主人 | 否 | 通用 | 排除某人的撤回消息 |
 
 ### 效果图
+<details>
+<summary>点击展开</summary>
+
 ![图片1](./img/1.png)
 ![图片2](./img/2.jpg)
 ![图片3](./img/3.png)
 ![图片4](./img/4.png)
+
+</details>
 
 ## ❤️感谢以下项目提供支持
 [NoneBot](https://github.com/nonebot/nonebot2)
