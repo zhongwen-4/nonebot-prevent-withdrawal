@@ -19,9 +19,13 @@ from nonebot.adapters.onebot.v11 import(
 
 import json, pathlib, httpx, random
 require("nonebot_plugin_localstore")
+require("nonebot_plugin_alconna")
 from nonebot_plugin_localstore import get_plugin_data_dir, get_plugin_cache_dir
+from nonebot_plugin_alconna import Alconna, on_alconna, Args, At, Match
 from nonebot.permission import SUPERUSER
 from nonebot.plugin import PluginMetadata
+from nonebot.exception import IgnoredException
+from nonebot.message import event_preprocessor
 
 
 path = get_plugin_data_dir()
@@ -32,6 +36,8 @@ send_private = on_command("切换私聊", aliases= {"切换模式私聊", "切�
 sed_group = on_command("切换群聊", aliases= {"切换模式群聊", "切换群聊模式", "qhql"}, permission= SUPERUSER)
 add_group = on_command("添加群", aliases= {"添加群聊", "addql"}, permission= SUPERUSER)
 del_group = on_command("删除群", aliases= {"删除群聊", "delql"}, permission= SUPERUSER)
+add_users = on_alconna(Alconna("加白", Args["user", At | int]), permission= SUPERUSER)
+del_users = on_alconna(Alconna("删白", Args["user", At | int]), permission= SUPERUSER)
 group_recall= on_notice()
 driver = get_driver()
 forward = on_message()
@@ -184,6 +190,67 @@ async def del_group_handle(
         data["group"].remove(event.group_id)
         xjson(data, path)
         await del_group.finish("删除成功")
+
+
+@add_users.handle()
+async def add_users_handle(
+    user: Match[At | int]
+):
+    data = djson(path)
+
+    if user.available:
+        if isinstance(user.result, At):
+            user_id = user.result.target
+        else:
+            user_id = user.result
+
+    if "users" not in data:
+        data["users"] = []
+        data["users"].append(user_id)
+        xjson(data, path)
+        await add_users.finish("已排除此人的撤回消息")
+    
+    if user_id in data["users"]:
+        await add_users.finish("此人已排除撤回消息，无需再次排除")
+    
+    data["users"].append(user_id)
+    xjson(data, path)
+    await add_users.finish("已排除此人的撤回消息")
+
+
+@del_users.handle()
+async def del_users_handle(
+    user: Match[At | int]
+):
+    data = djson(path)
+
+    if user.available:
+        if isinstance(user.result, At):
+            user_id = user.result.target
+        else:
+            user_id = user.result
+
+    if "users" not in data:
+        await del_users.finish("此人并未排除撤回消息，无需再次排除")
+    
+    if user_id not in data["users"]:
+        await del_users.finish("此人并未排除撤回消息，无需再次排除")
+    
+    data["users"].remove(user_id)
+    xjson(data, path)
+    await del_users.finish("已取消排除此人的撤回消息")
+
+
+@event_preprocessor
+async def do_something(event: GroupRecallNoticeEvent):
+    data = djson(path)
+
+    if "users" not in data:
+        return
+
+    if event.user_id in data["users"]:
+        logger.info(f"用户{event.user_id}的撤回消息被管理员排除，此次跳过")
+        raise IgnoredException("撤回消息被管理员排除")
 
 
 @group_recall.handle()
