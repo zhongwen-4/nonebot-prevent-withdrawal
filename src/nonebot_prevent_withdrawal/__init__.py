@@ -24,8 +24,6 @@ from nonebot_plugin_localstore import get_plugin_data_dir, get_plugin_cache_dir
 from nonebot_plugin_alconna import Alconna, on_alconna, Args, At, Match
 from nonebot.permission import SUPERUSER
 from nonebot.plugin import PluginMetadata
-from nonebot.exception import IgnoredException
-from nonebot.message import event_preprocessor
 
 
 path = get_plugin_data_dir()
@@ -38,6 +36,9 @@ add_group = on_command("添加群", aliases= {"添加群聊", "addql"}, permissi
 del_group = on_command("删除群", aliases= {"删除群聊", "delql"}, permission= SUPERUSER)
 add_users = on_alconna(Alconna("加白", Args["user", At | int]), permission= SUPERUSER)
 del_users = on_alconna(Alconna("删白", Args["user", At | int]), permission= SUPERUSER)
+add_admin = on_command("排除管理", permission= SUPERUSER)
+del_admin = on_command("取消排除", permission= SUPERUSER)
+
 group_recall= on_notice()
 driver = get_driver()
 forward = on_message()
@@ -237,17 +238,29 @@ async def del_users_handle(user: Match[At | int]):
     await del_users.finish("已取消排除此人的撤回消息")
 
 
-@event_preprocessor
-async def do_something(event: GroupRecallNoticeEvent):
+@add_admin.handle()
+async def add_admin_handle():
     data = djson(path)
 
-    if "users" not in data:
-        return
+    if "admin" not in data:
+        data["admin"] = True
+        xjson(data, path)
+        await add_admin.finish("排除成功")
 
-    if str(event.user_id) in data["users"]:
-        logger.info(f"用户{event.user_id}的撤回消息被管理员排除，此次跳过")
-        raise IgnoredException("撤回消息被管理员排除")
+    if data["admin"] == True:
+        await add_admin.finish("已经是排除状态了")
 
+
+@del_admin.handle()
+async def del_admin_handle():
+    data = djson(path)
+
+    if "admin" not in data:
+        await del_admin.finish("已经是未排除状态了")
+    
+    del data["admin"]
+    xjson(data, path)
+    await del_admin.finish("取消排除成功")
 
 @group_recall.handle()
 async def group_recall_handle(
@@ -265,6 +278,7 @@ async def group_recall_handle(
     group_name = await bot.get_group_info(group_id= event.group_id)
     uaer_name = await bot.get_group_member_info(group_id= event.group_id, user_id= user_id)
     operator = await bot.get_group_member_info(group_id= event.group_id, user_id= operator_id)
+    permission = await bot.get_group_member_info(group_id= event.group_id, user_id= operator_id)
     msg = await bot.get_msg(message_id= message_id)
     friend_list = await bot.get_friend_list()
     friend_list = [i["user_id"] for i in friend_list]
@@ -287,6 +301,11 @@ async def group_recall_handle(
         logger.error("未开启防撤回功能，无法发送撤回消息")
         await group_recall.finish()
 
+    if "admin" in data:
+        if permission["role"] == "admin" or permission["role"] == "owner":
+            logger.info("此次为管理员操作，已跳过")
+            await group_recall.finish()
+
     if data["model"] == 0:
         for i in config:
             if int(i) not in friend_list:
@@ -295,6 +314,17 @@ async def group_recall_handle(
         
         if x != []:
             await group_recall.finish()
+
+    if "users" in data:
+        if str(event.user_id) in data["users"]:
+            logger.info(f"用户{event.user_id}的撤回消息被管理员排除，此次跳过")
+            await group_recall.finish()
+
+    
+    if operator_id == event.self_id:
+        logger.info("撤回消息为bot，此次跳过")
+        await group_recall.finish()
+
 
     if "group" in data:
         if data["group"] == []:
