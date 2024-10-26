@@ -1,6 +1,6 @@
 [project]
 name = "nonebot-prevent-withdrawal"
-version = "0.1.8"
+version = "0.1.9"
 description = "偷看群友撤回的消息"
 authors = [
     {name = "zhongwen-4", email = "2401128923@qq.com"},
