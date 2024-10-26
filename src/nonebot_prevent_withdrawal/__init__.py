@@ -278,7 +278,6 @@ async def group_recall_handle(
     group_name = await bot.get_group_info(group_id= event.group_id)
     uaer_name = await bot.get_group_member_info(group_id= event.group_id, user_id= user_id)
     operator = await bot.get_group_member_info(group_id= event.group_id, user_id= operator_id)
-    permission = await bot.get_group_member_info(group_id= event.group_id, user_id= operator_id)
     msg = await bot.get_msg(message_id= message_id)
     friend_list = await bot.get_friend_list()
     friend_list = [i["user_id"] for i in friend_list]
@@ -286,6 +285,7 @@ async def group_recall_handle(
     group_name = group_name["group_name"]
     uaer_name = uaer_name["nickname"]
     operator_name = operator["nickname"]
+    permission = operator["role"]
     message = Message()
     x = []
     
@@ -302,7 +302,7 @@ async def group_recall_handle(
         await group_recall.finish()
 
     if "admin" in data:
-        if permission["role"] == "admin" or permission["role"] == "owner":
+        if permission == "admin" or permission == "owner":
             logger.info("此次为管理员操作，已跳过")
             await group_recall.finish()
 
