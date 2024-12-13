@@ -123,7 +123,7 @@ async def shut_handle(
 async def send_private_handle():
     
     data = djson(path)
-    if "private" not in data:
+    if "model" not in data:
         data["model"] = 0
         xjson(data, path)
         await send_private.finish("切换成功")
@@ -331,7 +331,13 @@ async def group_recall_handle(
             data["model"] = 0
             xjson(data, path)
             logger.info("未找到群聊设置，已设置为私聊")
+
     
+    if "group" not in data or "group_id" not in data["group"] and data["model"] == 1:
+        data["model"] = 0
+        xjson(data, path)
+        logger.info("未找到群聊设置，已设置为私聊")
+
     
     if data["model"] == 0:
         for i in config:
@@ -347,19 +353,19 @@ async def group_recall_handle(
                 message= f"消息撤回提醒\n操作群：{group_name} - {group_id}\n操作人：{operator_name} - {operator_id}\n撤回人：{uaer_name} - {user_id}\n以下是撤回消息"
             )
     
-    if len(msg["message"]) == 0:
+    if msg["message"][0]["type"] == "file":
         if data["model"] == 0:
             for i in config:
                 await bot.send_private_msg(
                     user_id= int(i),
-                    message= "出错啦！这条消息可能是文件消息，协议端暂时获取不到！"
+                    message= "出错啦！这条消息是文件消息，无法下载原文件！"
                 )
             
         if data["model"] == 1:
             for i in data["group"]:
                 await bot.send_group_msg(
                     group_id= i,
-                    message= "出错啦！这条消息可能是文件消息，协议端暂时获取不到！"
+                    message= "出错啦！这条消息是文件消息，无法下载原文件！"
                 )
             
         await group_recall.finish()
