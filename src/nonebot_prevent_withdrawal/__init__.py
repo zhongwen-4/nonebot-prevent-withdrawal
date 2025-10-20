@@ -406,6 +406,8 @@ async def group_recall_handle(
             data= msgsegment["data"]
         )
     
+    message = str(message).replace("https://multimedia.nt.qq.com.cn", "http://multimedia.nt.qq.com.cn")
+
     if data["model"] == 0:
         for i in config:
             await bot.send_private_msg(
